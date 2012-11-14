@@ -7,7 +7,7 @@ module.exports = function(grunt) {
       banner: 'angular.module("ui.bootstrap", [<%= modules %>]);'
     },
     lint: {
-      files: ['src/**/*.js']
+      files: ['grunt.js','src/**/*.js']
     },
     watch: {
       files: '<config:lint.files>',
@@ -41,19 +41,17 @@ module.exports = function(grunt) {
   grunt.registerTask('after-test', 'find-modules concat');
 
   // Default task.
-  grunt.registerTask('default', 'before-test test after-test');
+  grunt.registerTask('default', 'before-test test after-test demo');
 
   //Common ui.bootstrap module containing all modules
   grunt.registerTask('find-modules', 'Generate ui.bootstrap module depending on all existing directives', function() {
-    var modules = [];
-    grunt.file.expandDirs('src/*').forEach(function(dir) {
-      var moduleName = dir.split("/")[1];
-      modules.push('"ui.bootstrap.' + moduleName + '"');
+    var modules = grunt.file.expandDirs('src/*').map(function(dir) {
+      return '"ui.bootstrap.' + dir.split("/")[1] + '"';
     });
     grunt.config('modules', modules);
   });
 
-  grunt.registerTask('demo', 'Make demo', function() {
+  grunt.registerTask('demo', 'Create grunt demo.html from every module\'s files', function() {
     var modules = grunt.file.expandDirs('src/*').map(function(dir) {
       var moduleName = dir.split("/")[1];
       return {
@@ -63,7 +61,7 @@ module.exports = function(grunt) {
       };
     });
     grunt.file.write(
-      'demo.html', 
+      'dist/demo.html', 
       grunt.template.process(grunt.file.read('misc/demo-template.html'), {
         modules: modules
       })

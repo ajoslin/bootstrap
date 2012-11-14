@@ -8,11 +8,13 @@ lib-cov
 *.gz
 *.swp
 *.swo
+.DS_Store
 
 pids
 logs
 results
 dist
+demo.html
 
 node_modules
 npm-debug.log

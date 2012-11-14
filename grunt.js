@@ -7,7 +7,7 @@ module.exports = function(grunt) {
       banner: 'angular.module("ui.bootstrap", [<%= modules %>]);'
     },
     lint: {
-      files: ['grunt.js', 'src/**/*.js']
+      files: ['src/**/*.js']
     },
     watch: {
       files: '<config:lint.files>',
@@ -16,7 +16,7 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         src: ['<banner>', 'src/*/*.js'],
-        dest: 'dist/angular-ui-bootstrap.js' 
+        dest: 'dist/ui-bootstrap.js' 
       }
     },
     html2js: {
@@ -51,6 +51,23 @@ module.exports = function(grunt) {
       modules.push('"ui.bootstrap.' + moduleName + '"');
     });
     grunt.config('modules', modules);
+  });
+
+  grunt.registerTask('demo', 'Make demo', function() {
+    var modules = grunt.file.expandDirs('src/*').map(function(dir) {
+      var moduleName = dir.split("/")[1];
+      return {
+        name: moduleName,
+        js: grunt.file.read(dir + "demo/" + moduleName + "Demo.js") || 'demojs',
+        html: grunt.file.read(dir + "demo/" + moduleName + "Demo.html") || 'demohtml'
+      };
+    });
+    grunt.file.write(
+      'demo.html', 
+      grunt.template.process(grunt.file.read('misc/demo-template.html'), {
+        modules: modules
+      })
+    );
   });
 
   //Html templates to $templateCache for tests

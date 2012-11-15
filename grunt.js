@@ -1,3 +1,6 @@
+var fs = require('fs');
+var markdown = require('markdown').markdown;
+
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -54,11 +57,16 @@ module.exports = function(grunt) {
   grunt.registerTask('demo', 'Create grunt demo.html from every module\'s files', function() {
     var modules = grunt.file.expandDirs('src/*').map(function(dir) {
       var moduleName = dir.split("/")[1];
-      return {
-        name: moduleName,
-        js: grunt.file.read(dir + "demo/" + moduleName + "Demo.js") || 'demojs',
-        html: grunt.file.read(dir + "demo/" + moduleName + "Demo.html") || 'demohtml'
-      };
+      if (fs.existsSync(dir + "docs")) {
+        return {
+          name: moduleName,
+          js: grunt.file.read(dir + "docs/demo.js"),
+          html: grunt.file.read(dir + "docs/demo.html"),
+          description: markdown.toHTML(grunt.file.read(dir + "docs/readme.md"))
+        };
+      } else {
+        return {name: moduleName, js: moduleName, html: moduleName, description: moduleName};
+      }
     });
     grunt.file.write(
       'dist/demo.html', 

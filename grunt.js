@@ -65,7 +65,12 @@ module.exports = function(grunt) {
           description: markdown.toHTML(grunt.file.read(dir + "docs/readme.md"))
         };
       } else {
-        return {name: moduleName, js: moduleName, html: moduleName, description: moduleName};
+        return {
+          name: moduleName, 
+          js: moduleName,
+          html: moduleName,
+          description: moduleName
+        };
       }
     });
     grunt.file.write(

@@ -304,7 +304,7 @@ module.exports = function(grunt) {
     grunt.log.writeln('Generated tag ' + ('"' + newVersion + '"').cyan +'.');
 
     var remote = 'ajoslin', tree = 'grunt-release';
-    sh.exec('git push ' + remote + ' ' + tree + ' --tags', {silent:true});
+    sh.exec('git push -f ' + remote + ' ' + tree + ' --tags', {silent:true});
     grunt.log.writeln('\nRelease ' + newVersion.cyan + ' pushed with tags.');
   });
 

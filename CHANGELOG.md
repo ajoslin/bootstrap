@@ -1,3 +1,227 @@
+# 0.3.1 (2013-05-09)
+
+## Features
+
+
+- **tabs:**
+  
+  - Change directive name, add features ([c5326595](https://github.com/angular-ui/bootstrap/commit/c5326595))
+  
+
+
+## Bug Fixes
+
+
+- **tooltip:**
+  
+  - fix positioning error when appendToBody is set to true ([76fee1f9](https://github.com/angular-ui/bootstrap/commit/76fee1f9))
+  
+  - close tooltips appended to body on location change ([041261b5](https://github.com/angular-ui/bootstrap/commit/041261b5))
+  
+
+
+## Breaking Changes
+
+
+- **tabs:**
+  
+   The 'tabs' directive has been renamed to 'tabset', and
+ the 'pane' directive has been renamed to 'tab'.
+
+    To migrate your code, follow the example below.
+
+    Before:
+
+    <tabs>
+      <pane heading="one">
+        First Content
+      </pane>
+      <pane ng-repeat="apple in basket" heading="{{apple.heading}}">
+        {{apple.content}}
+      </pane>
+    </tabs>
+
+    After:
+
+    <tabset>
+      <tab heading="one">
+        First Content
+      </tab>
+      <tab ng-repeat="apple in basket" heading="{{apple.heading}}">
+        {{apple.content}}
+      </tab>
+    </tabset>
+
+  
+
+# 0.3.1 (2013-05-09)
+
+## Features
+
+
+- **tabs:**
+  
+  - Change directive name, add features ([c5326595](https://github.com/angular-ui/bootstrap/commit/c5326595))
+  
+
+
+## Bug Fixes
+
+
+- **tooltip:**
+  
+  - fix positioning error when appendToBody is set to true ([76fee1f9](https://github.com/angular-ui/bootstrap/commit/76fee1f9))
+  
+  - close tooltips appended to body on location change ([041261b5](https://github.com/angular-ui/bootstrap/commit/041261b5))
+  
+
+
+## Breaking Changes
+
+
+- **tabs:**
+  
+   The 'tabs' directive has been renamed to 'tabset', and
+ the 'pane' directive has been renamed to 'tab'.
+
+    To migrate your code, follow the example below.
+
+    Before:
+
+    <tabs>
+      <pane heading="one">
+        First Content
+      </pane>
+      <pane ng-repeat="apple in basket" heading="{{apple.heading}}">
+        {{apple.content}}
+      </pane>
+    </tabs>
+
+    After:
+
+    <tabset>
+      <tab heading="one">
+        First Content
+      </tab>
+      <tab ng-repeat="apple in basket" heading="{{apple.heading}}">
+        {{apple.content}}
+      </tab>
+    </tabset>
+
+  
+
+# 0.3.1 (2013-05-09)
+
+## Features
+
+
+- **tabs:**
+  
+  - Change directive name, add features ([c5326595](https://github.com/angular-ui/bootstrap/commit/c5326595))
+  
+
+
+## Bug Fixes
+
+
+- **tooltip:**
+  
+  - fix positioning error when appendToBody is set to true ([76fee1f9](https://github.com/angular-ui/bootstrap/commit/76fee1f9))
+  
+  - close tooltips appended to body on location change ([041261b5](https://github.com/angular-ui/bootstrap/commit/041261b5))
+  
+
+
+## Breaking Changes
+
+
+- **tabs:**
+  
+   The 'tabs' directive has been renamed to 'tabset', and
+ the 'pane' directive has been renamed to 'tab'.
+
+    To migrate your code, follow the example below.
+
+    Before:
+
+    <tabs>
+      <pane heading="one">
+        First Content
+      </pane>
+      <pane ng-repeat="apple in basket" heading="{{apple.heading}}">
+        {{apple.content}}
+      </pane>
+    </tabs>
+
+    After:
+
+    <tabset>
+      <tab heading="one">
+        First Content
+      </tab>
+      <tab ng-repeat="apple in basket" heading="{{apple.heading}}">
+        {{apple.content}}
+      </tab>
+    </tabset>
+
+  
+
+# 0.3.1 (2013-05-09)
+
+## Features
+
+
+- **tabs:**
+  
+  - Change directive name, add features ([c5326595](https://github.com/angular-ui/bootstrap/commit/c5326595))
+  
+
+
+## Bug Fixes
+
+
+- **tooltip:**
+  
+  - fix positioning error when appendToBody is set to true ([76fee1f9](https://github.com/angular-ui/bootstrap/commit/76fee1f9))
+  
+  - close tooltips appended to body on location change ([041261b5](https://github.com/angular-ui/bootstrap/commit/041261b5))
+  
+
+
+## Breaking Changes
+
+
+- **tabs:**
+  
+   The 'tabs' directive has been renamed to 'tabset', and
+ the 'pane' directive has been renamed to 'tab'.
+
+    To migrate your code, follow the example below.
+
+    Before:
+
+    <tabs>
+      <pane heading="one">
+        First Content
+      </pane>
+      <pane ng-repeat="apple in basket" heading="{{apple.heading}}">
+        {{apple.content}}
+      </pane>
+    </tabs>
+
+    After:
+
+    <tabset>
+      <tab heading="one">
+        First Content
+      </tab>
+      <tab ng-repeat="apple in basket" heading="{{apple.heading}}">
+        {{apple.content}}
+      </tab>
+    </tabset>
+
+  
+
 # 0.3.0 (2013-04-30)
 
 ## Features

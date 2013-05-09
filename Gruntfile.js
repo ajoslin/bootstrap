@@ -49,14 +49,14 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         options: {
-          banner: '<%= meta.modules %>\n'
+          banner: '<%=meta.banner%>\n\n<%= meta.modules %>\n'
         },
         src: [], //src filled in by build task
         dest: '<%= dist %>/<%= filename %>-<%= pkg.version %>.js'
       },
       dist_tpls: {
         options: {
-          banner: '<%= meta.all %>\n<%= meta.tplmodules %>\n'
+          banner: '<%=meta.banner%>\n\n<%= meta.all %>\n<%= meta.tplmodules %>\n'
         },
         src: [], //src filled in by build task
         dest: '<%= dist %>/<%= filename %>-tpls-<%= pkg.version %>.js'

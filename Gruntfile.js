@@ -25,7 +25,15 @@ module.exports = function(grunt) {
     meta: {
       modules: 'angular.module("ui.bootstrap", [<%= srcModules %>]);',
       tplmodules: 'angular.module("ui.bootstrap.tpls", [<%= tplModules %>]);',
-      all: 'angular.module("ui.bootstrap", ["ui.bootstrap.tpls", <%= srcModules %>]);'
+      all: 'angular.module("ui.bootstrap", ["ui.bootstrap.tpls", <%= srcModules %>]);',
+      banner: 
+        '/*\n' +
+        ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' * <%= pkg.homepage %>\n' +
+        ' *\n' +
+        ' * Copyright (c) <%= grunt.template.today("yyyy") %>\n' +
+        ' * Licensed under <%= pkg.license %>\n' +
+        ' */\n'
     },
     delta: {
       html: {

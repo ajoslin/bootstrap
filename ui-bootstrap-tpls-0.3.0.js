@@ -1,8 +1,8 @@
 /*
  * angular-ui-bootstrap - v0.3.0 - 2013-05-11
- * 
+ * http://angular-ui.github.io/bootstrap
  * Copyright (c) 2013
- * Licensed under 
+ * Licensed under MIT License
  */
 
 

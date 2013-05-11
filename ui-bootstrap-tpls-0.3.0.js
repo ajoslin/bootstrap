@@ -1,5 +1,13 @@
+/*
+ * angular-ui-bootstrap - v0.3.0 - 2013-05-11
+ * http://angular-ui.github.io/bootstrap
+ * Copyright (c) 2013
+ * Licensed under MIT License
+ */
+
+
 angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.transition","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dialog","ui.bootstrap.dropdownToggle","ui.bootstrap.modal","ui.bootstrap.pagination","ui.bootstrap.position","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.typeahead"]);
-angular.module("ui.bootstrap.tpls", ["template/accordion/accordion-group.html","template/accordion/accordion.html","template/alert/alert.html","template/carousel/carousel.html","template/carousel/slide.html","template/dialog/message.html","template/pagination/pagination.html","template/tooltip/tooltip-html-unsafe-popup.html","template/tooltip/tooltip-popup.html","template/popover/popover.html","template/progressbar/bar.html","template/progressbar/progress.html","template/rating/rating.html","template/tabs/pane.html","template/tabs/tabs.html","template/typeahead/typeahead.html"]);
+angular.module("ui.bootstrap.tpls", ["template/accordion/accordion-group.html","template/accordion/accordion.html","template/alert/alert.html","template/carousel/carousel.html","template/carousel/slide.html","template/dialog/message.html","template/pagination/pagination.html","template/tooltip/tooltip-html-unsafe-popup.html","template/tooltip/tooltip-popup.html","template/popover/popover.html","template/progressbar/bar.html","template/progressbar/progress.html","template/rating/rating.html","template/tabs/tab.html","template/tabs/tabset.html","template/typeahead/typeahead.html"]);
 angular.module('ui.bootstrap.transition', [])
 
 /**
@@ -1352,9 +1360,9 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position' ] )
             } else {
               element.after( tooltip );
             }
-            
+
             // Get the position of the directive element.
-            position = $position.position( element );
+            position = options.appendToBody ? $position.offset( element ) : $position.position( element );
 
             // Get the height and width of the tooltip so we can center it.
             ttWidth = tooltip.prop( 'offsetWidth' );
@@ -1451,6 +1459,11 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position' ] )
               element.bind( triggers.hide, hideTooltipBind );
             }
           });
+
+          //if a tooltip is attached to <body> we need to remove it on location change
+          if ( options.appendToBody ) {
+            scope.$on('$locationChangeSuccess', hide);
+          }
         }
       };
     };
@@ -1481,10 +1494,7 @@ angular.module( 'ui.bootstrap.tooltip', [ 'ui.bootstrap.position' ] )
 
 .directive( 'tooltipHtmlUnsafe', [ '$tooltip', function ( $tooltip ) {
   return $tooltip( 'tooltipHtmlUnsafe', 'tooltip', 'mouseenter' );
-}])
-
-;
-
+}]);
 
 /**
  * The following features are still outstanding: popup delay, animation as a
@@ -1665,80 +1675,173 @@ angular.module('ui.bootstrap.rating', [])
   };
 }]);
 angular.module('ui.bootstrap.tabs', [])
-.controller('TabsController', ['$scope', '$element', function($scope, $element) {
-  var panes = $scope.panes = [];
 
-  this.select = $scope.select = function selectPane(pane) {
-    angular.forEach(panes, function(pane) {
-      pane.selected = false;
-    });
-    pane.selected = true;
+.directive('tabs', function() {
+  return function() {
+    throw new Error("The `tabs` directive is deprecated, please migrate to `tabset`. Instructions can be found at http://github.com/angular-ui/bootstrap/tree/master/CHANGELOG.md");
+  };
+})
+
+.controller('TabsetController', ['$scope', '$element', 
+function TabsetCtrl($scope, $element) {
+  var ctrl = this,
+    tabs = ctrl.tabs = $scope.tabs = [];
+
+  ctrl.select = function(tab) {
+    angular.forEach(tabs, function(tab) {
+      tab.active = false;
+    });  
+    tab.active = true;
   };
 
-  this.addPane = function addPane(pane) {
-    if (!panes.length) {
-      $scope.select(pane);
+  ctrl.addTab = function addTab(tab) {
+    tabs.push(tab);
+    if (tabs.length == 1) {
+      ctrl.select(tab);
     }
-    panes.push(pane);
   };
 
-  this.removePane = function removePane(pane) { 
-    var index = panes.indexOf(pane);
-    panes.splice(index, 1);
-    //Select a new pane if removed pane was selected 
-    if (pane.selected && panes.length > 0) {
-      $scope.select(panes[index < panes.length ? index : index-1]);
+  ctrl.removeTab = function removeTab(tab) { 
+    var index = tabs.indexOf(tab);
+    //Select a new tab if the tab to be removed is selected
+    if (tab.active && tabs.length > 1) {
+      //If this is the last tab, select the previous tab. else, the next tab.
+      var newActiveIndex = index == tabs.length - 1 ? index - 1 : index + 1;
+      ctrl.select(tabs[newActiveIndex]);
     }
+    tabs.splice(index, 1);
   };
 }])
-.directive('tabs', function() {
+
+.directive('tabset', function() {
   return {
     restrict: 'EA',
     transclude: true,
     scope: {},
-    controller: 'TabsController',
-    templateUrl: 'template/tabs/tabs.html',
-    replace: true
+    controller: 'TabsetController',
+    templateUrl: 'template/tabs/tabset.html'
   };
 })
-.directive('pane', ['$parse', function($parse) {
-  return {
-    require: '^tabs',
-    restrict: 'EA',
-    transclude: true,
-    scope:{
-      heading:'@'
-    },
-    link: function(scope, element, attrs, tabsCtrl) {
-      var getSelected, setSelected;
-      scope.selected = false;
-      if (attrs.active) {
-        getSelected = $parse(attrs.active);
-        setSelected = getSelected.assign;
-        scope.$watch(
-          function watchSelected() {return getSelected(scope.$parent);},
-          function updateSelected(value) {scope.selected = value;}
-        );
-        scope.selected = getSelected ? getSelected(scope.$parent) : false;
-      }
-      scope.$watch('selected', function(selected) {
-        if(selected) {
-          tabsCtrl.select(scope);
-        }
-        if(setSelected) {
-          setSelected(scope.$parent, selected);
-        }
-      });
 
-      tabsCtrl.addPane(scope);
-      scope.$on('$destroy', function() {
-        tabsCtrl.removePane(scope);
-      });
+.directive('tab', ['$parse', '$http', '$templateCache', '$compile',
+function($parse, $http, $templateCache, $compile) {
+  return {
+    require: '^tabset',
+    restrict: 'EA',
+    replace: true,
+    templateUrl: 'template/tabs/tab.html',
+    transclude: true,
+    scope: {
+      heading: '@',
+      onSelect: '&select' //This callback is called in contentHeadingTransclude
+                          //once it inserts the tab's content into the dom
     },
-    templateUrl: 'template/tabs/pane.html',
-    replace: true
+    controller: function() {
+      //Empty controller so other directives can require being 'under' a tab
+    },
+    compile: function(elm, attrs, transclude) {
+      return function postLink(scope, elm, attrs, tabsetCtrl) {
+        var getActive, setActive;
+        scope.active = false; // default value
+        if (attrs.active) {
+          getActive = $parse(attrs.active);
+          setActive = getActive.assign;
+          scope.$parent.$watch(getActive, function updateActive(value) {
+            scope.active = !!value;
+          });
+        } else {
+          setActive = getActive = angular.noop;
+        }
+
+        scope.$watch('active', function(active) {
+          setActive(scope.$parent, active);
+          if (active) {
+            tabsetCtrl.select(scope);
+            scope.onSelect();
+          }
+        });
+
+        scope.select = function() {
+          scope.active = true;
+        };
+
+        tabsetCtrl.addTab(scope);
+        scope.$on('$destroy', function() {
+          tabsetCtrl.removeTab(scope);
+        });
+        //If the tabset sets this tab to active, set the parent scope's active
+        //binding too.  We do this so the watch for the parent's initial active
+        //value won't overwrite what is initially set by the tabset
+        if (scope.active) {
+          setActive(scope.$parent, true);
+        } 
+
+        //Transclude the collection of sibling elements. Use forEach to find
+        //the heading if it exists. We don't use a directive for tab-heading
+        //because it is problematic. Discussion @ http://git.io/MSNPwQ
+        transclude(scope.$parent, function(clone) {
+          //Look at every element in the clone collection. If it's tab-heading,
+          //mark it as that.  If it's not tab-heading, mark it as tab contents
+          var contents = [], heading;
+          angular.forEach(clone, function(el) {
+            //See if it's a tab-heading attr or element directive
+            //First make sure it's a normal element, one that has a tagName
+            if (el.tagName &&
+                (el.hasAttribute("tab-heading") || 
+                 el.hasAttribute("data-tab-heading") ||
+                 el.tagName.toLowerCase() == "tab-heading" ||
+                 el.tagName.toLowerCase() == "data-tab-heading"
+                )) {
+              heading = el;
+            } else {
+              contents.push(el);
+            }
+          });
+          //Share what we found on the scope, so our tabHeadingTransclude and
+          //tabContentTransclude directives can find out what the heading and
+          //contents are.
+          if (heading) { 
+            scope.headingElement = angular.element(heading);
+          }
+          scope.contentElement = angular.element(contents);
+        });
+      };
+    }
   };
-}]);
+}])
+
+.directive('tabHeadingTransclude', [function() {
+  return {
+    restrict: 'A',
+    require: '^tab', 
+    link: function(scope, elm, attrs, tabCtrl) {
+      scope.$watch('headingElement', function updateHeadingElement(heading) {
+        if (heading) {
+          elm.html('');
+          elm.append(heading);
+        }
+      });
+    }
+  };
+}])
+
+.directive('tabContentTransclude', ['$parse', function($parse) {
+  return {
+    restrict: 'A',
+    require: '^tabset',
+    link: function(scope, elm, attrs, tabsetCtrl) {
+      scope.$watch($parse(attrs.tabContentTransclude), function(tab) {
+        elm.html('');
+        if (tab) {
+          elm.append(tab.contentElement);
+        }
+      });
+    }
+  };
+}])
+
+;
+
 
 angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
 
@@ -2103,6 +2206,14 @@ angular.module("template/tabs/pane.html", []).run(["$templateCache", function($t
     "");
 }]);
 
+angular.module("template/tabs/tab.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("template/tabs/tab.html",
+    "<li ng-class=\"{active: active}\">\n" +
+    "  <a ng-click=\"select()\" tab-heading-transclude>{{heading}}</a>\n" +
+    "</li>\n" +
+    "");
+}]);
+
 angular.module("template/tabs/tabs.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/tabs/tabs.html",
     "<div class=\"tabbable\">\n" +
@@ -2116,9 +2227,21 @@ angular.module("template/tabs/tabs.html", []).run(["$templateCache", function($t
     "");
 }]);
 
-angular.module("template/typeahead/match.html", []).run(["$templateCache", function($templateCache){
-  $templateCache.put("template/typeahead/match.html",
-    "<a tabindex=\"-1\" ng-bind-html-unsafe=\"match.label | typeaheadHighlight:query\"></a>");
+angular.module("template/tabs/tabset.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("template/tabs/tabset.html",
+    "\n" +
+    "<div class=\"tabbable\">\n" +
+    "  <ul class=\"nav nav-tabs\" ng-transclude>\n" +
+    "  </ul>\n" +
+    "  <div class=\"tab-content\">\n" +
+    "    <div class=\"tab-pane\" \n" +
+    "         ng-repeat=\"tab in tabs\" \n" +
+    "         ng-class=\"{active: tab.active}\"\n" +
+    "         tab-content-transclude=\"tab\" tt=\"tab\">\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "");
 }]);
 
 angular.module("template/typeahead/typeahead.html", []).run(["$templateCache", function($templateCache) {

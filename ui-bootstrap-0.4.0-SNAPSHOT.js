@@ -1,3 +1,11 @@
+/*
+ * angular-ui-bootstrap - v0.4.0-SNAPSHOT - 2013-05-13
+ * 
+ * Copyright (c) 2013
+ * Licensed under 
+ */
+
+
 angular.module("ui.bootstrap", ["ui.bootstrap.transition","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.datepicker","ui.bootstrap.dialog","ui.bootstrap.dropdownToggle","ui.bootstrap.modal","ui.bootstrap.pagination","ui.bootstrap.position","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.typeahead"]);
 angular.module('ui.bootstrap.transition', [])
 

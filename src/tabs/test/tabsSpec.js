@@ -482,17 +482,47 @@ describe('tabs', function() {
   });
 
   //https://github.com/angular-ui/bootstrap/issues/524
-  describe('child compilation', function() {
+  ddescribe('child compilation', function() {
 
-    var elm;
-    beforeEach(inject(function($compile, $rootScope) {
-      elm = $compile('<tabset><tab><div></div></tab></tabset></div>')($rootScope.$new());
-      $rootScope.$apply();
-    }));
+    var scope;
+    function makeTabs(template) {
+      var elm;
+      inject(function($compile, $rootScope) {
+        scope=$rootScope.$new();
+        elm = $compile(template)(scope);
+        scope.$apply();
+      });
+      return elm;
+    }
 
     it('should hookup the tab\'s children to the tab with $compile', function() {
+      var elm = makeTabs('<tabset><tab><div></div></tab></tabset></div>');
       var tabChild = $('.tab-pane', elm).children().first();
       expect(tabChild.inheritedData('$tabsetController')).toBeTruthy();
     });
+
+    it('should work with forms', function() {
+      var elm = makeTabs('<form name="myForm"><input name="outside" ng-model="outside" required>' +
+                         '<tabset>' +
+                         '<tab><input type="text" name="tabby" ng-model="tabby" required></tab>' +
+                         '</tabset>' +
+                         '</form>');
+      var tabInput = elm.find('input[name="tabby"]');
+      
+      var form = tabInput.inheritedData('$formController');
+      expect(form).toBeDefined();
+      expect(form.$name).toBe('myForm');
+
+      //expect it to have added our tabby input
+      expect(form.tabby.$name).toBe('tabby');
+      expect(form.$dirty).toBe(false);
+
+      tabInput.val('hello').trigger('input');
+      expect(scope.tabby).toBe('hello');
+
+      expect(form.$dirty).toBe(true);
+    });
+
+
   });
 });

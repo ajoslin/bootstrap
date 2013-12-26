@@ -1,11 +1,16 @@
- language: node_js
- node_js:
-   - "0.8"
+language: node_js
+node_js:
+ - "0.8"
+env:
+  global:
+    secure: |-
+      UIWglpU0Wb3EhXyY6bFw8SX/muaKlSogZM1axrLNzpuHafJLixexEgrFy19j2uXnF/IpaIgiEfPiCY/ym9lA/uHYVi19QExm+msxItEiObhD6sUcP9SXZbcucIaC1WBtmz0uCvawz3nwvSvwLoZ+OMnmNWvWWvhl9rekdUG/Lyk=
+before_script:
+- echo token is $GH_TOKEN
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- npm install --quiet -g grunt-cli karma bower
+- npm install
 
- before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - npm install --quiet -g grunt-cli karma
-  - npm install
-
- script: grunt
+script: 
+  grunt travis

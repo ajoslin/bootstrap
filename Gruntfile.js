@@ -195,6 +195,8 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', ['before-test', 'test', 'after-test']);
 
+  grunt.registerTask('travis', ['before-test', 'karma:travis', 'after-test', 'bower']);
+
   grunt.registerTask('enforce', 'Install commit message enforce script if it doesn\'t exist', function() {
     if (!grunt.file.exists('.git/hooks/commit-msg')) {
       grunt.file.copy('misc/validate-commit-msg.js', '.git/hooks/commit-msg');
@@ -241,6 +243,7 @@ module.exports = function(grunt) {
           .map(grunt.file.read).join("\n")
       }
     };
+    require('fs').writeFileSync('module.json', JSON.stringify(module, null, 2));
     module.dependencies.forEach(findModule);
     grunt.config('modules', grunt.config('modules').concat(module));
   }
@@ -319,11 +322,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test', 'Run tests on singleRun karma server', function() {
     //this task can be executed in 3 different environments: local, Travis-CI and Jenkins-CI
     //we need to take settings for each one into account
-    if (process.env.TRAVIS) {
-      grunt.task.run('karma:travis');
-    } else {
-      grunt.task.run(this.args.length ? 'karma:jenkins' : 'karma:continuous');
-    }
+    grunt.task.run(this.args.length ? 'karma:jenkins' : 'karma:continuous');
   });
 
   function setVersion(type, suffix) {
@@ -362,6 +361,16 @@ module.exports = function(grunt) {
         grunt.fatal(result.output);
       }
     });
+  });
+
+  grunt.registerTask("bower", 'push all modules to bower', function() {
+    var q = require('q');
+    var makeBower = require('./misc/scripts/create-bower-repo');
+    var pkg = grunt.config('pkg');
+    var done = this.async();
+    q.all( grunt.config('modules').map(function(module) {
+      return makeBower(module, pkg, __dirname);
+    }) ).then(done);
   });
 
   return grunt;

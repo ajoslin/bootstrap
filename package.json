@@ -16,6 +16,10 @@
     "grunt-karma": "~0.4.4",
     "node-markdown": "0.1.1",
     "semver": "~1.1.4",
-    "shelljs": "~0.1.4"
+    "shelljs": "~0.1.4",
+    "lodash": "~2.4.1",
+    "octonode": "~0.4.1",
+    "request": "~2.30.0",
+    "q": "~0.9.7"
   }
 }

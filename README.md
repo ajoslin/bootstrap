@@ -10,22 +10,34 @@
 
 Do you want to see directives in action? Visit http://angular-ui.github.io/bootstrap/!
 
-## Installation
+## Quick Start
 
-Installation is easy as angular-ui-bootstrap has minimal dependencies - only the AngularJS and Bootstrap's CSS are required.
-After downloading dependencies (or better yet, referencing them from your favourite CDN) you need to download build version of this project. All the files and their purposes are described here: 
-https://github.com/angular-ui/bootstrap/tree/gh-pages#build-files
-Don't worry, if you are not sure which file to take, opt for `ui-bootstrap-tpls-[version].min.js`.
+Installation is simple.  All that is required is bootstrap's CSS and AngularJS.
 
-When you are done downloading all the dependencies and project files the only remaining part is to add dependencies on the `ui.bootstrap` AngularJS module:
-
-```javascript
-angular.module('myModule', ['ui.bootstrap']);
+```html
+<html>
+<head>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.js"></script>
+  <script src="ui-bootstrap-tpls.js"></script>
+</head>
+<body>
+  <script>
+    angular.module('myApp', ['ui.bootstrap']);
+  </script>
+</body>
+</html>
 ```
 
-Project files are also available through your favourite package manager:
-* **Bower**: `bower install angular-bootstrap`
-* **NuGet**: https://nuget.org/packages/Angular.UI.Bootstrap/
+There are several ways to download our javascript files:
+
+1. cdnjs: http://cdnjs.com/libraries/angular-ui-bootstrap/
+2. bower: `bower install angular-ui-bootstrap`
+3. bower for a specific component: `bower install angular-ui/bower-bootstrap-accordion`
+4. direct download from github: https://github.com/angular-ui/bootstrap/tree/gh-pages#build-files
+5. NuGeT: http://www.nuget.org/packages/Angular.UI.Bootstrap/
+
+Don't worry, if you are not sure which file to take, opt for `ui-bootstrap-tpls-[version].min.js`.
 
 ## Supported browsers
 
@@ -85,33 +97,23 @@ We are always looking for the quality contributions! Please check the [CONTRIBUT
 ### Development
 #### Prepare your environment
 * Install [Node.js](http://nodejs.org/) and NPM (should come with)
-* Install global dev dependencies: `npm install -g grunt-cli karma`
-* Install local dev dependencies: `npm install` while current directory is bootstrap repo
+* Install global dev dependencies: `npm install -g bower gulp`
+* Instal local dev dependencies: `npm install && bower install` in repository directory
 
-#### Build
-* Build the whole project: `grunt` - this will run `lint`, `test`, and `concat` targets
-* To build modules, first run `grunt html2js` then `grunt build:module1:module2...:moduleN`
+#### Development Commands
+* `gulp` to jshint, build, test, and create docs
+* `gulp build` to jshint & build
+* `gulp jshint` to just jshint
+* `gulp docs` to create docs
+* `gulp test` for one-time test
+* `gulp watch` to watch and re-run tests on change
 
-You can generate a custom build, containing only needed modules, from the project's homepage.
-Alternatively you can run local Grunt build from the command line and list needed modules as shown below:
-
-```
-grunt build:modal:tabs:alert:popover:dropdownToggle:buttons:progressbar
-```
-
-Check the Grunt build file for other tasks that are defined for this project.
-
-#### TDD
-* Run test: `grunt watch`
- 
-This will start Karma server and will continuously watch files in the project, executing tests upon every change.
-
-#### Test coverage
-Add the `--coverage` option (e.g. `grunt test --coverage`, `grunt watch --coverage`) to see reports on the test coverage. These coverage reports are found in the coverage folder.
+####  Test coverage
+Add the `--coverage` option (`gulp test --coverage`, `gulp watch --coverage`) to generate test coverage reports to the `coverage` folder.
 
 ### Customize templates
 
-As mentioned directives from this repository have all the markup externalized in templates. You might want to customize default
+As mentioned, directives from this repository have all the markup externalized in templates. You might want to customize default
 templates to match your desired look & feel, add new functionality etc.
 
 The easiest way to override an individual template is to use the `<script>` directive:
@@ -125,7 +127,7 @@ The easiest way to override an individual template is to use the `<script>` dire
 </script>
 ```
 
-If you want to override more templates it makes sense to store them as individual files and feed the `$templateCache` from those partials.
+If you want to override more templates, it makes sense to store them as individual files and feed the `$templateCache` from those partials.
 For people using Grunt as the build tool it can be easily done using the `grunt-html2js` plugin. You can also configure your own template url.
 Let's have a look:
 
@@ -136,7 +138,7 @@ Add "html2js" task to your Gruntfile
 html2js: {
   options: {
     base: '.',
-    module: 'ui-templates',
+    module: 'my-ui-templates',
     rename: function (modulePath) {
       var moduleName = modulePath.replace('app/views/partials/ui-bootstrap-tpls/', '').replace('.html', '');
       return 'template' + '/' + moduleName + '.html';
@@ -144,19 +146,19 @@ html2js: {
   },
   main: {
     src: ['app/views/partials/ui-bootstrap-tpls/**/*.html'],
-    dest: '.tmp/ui-templates.js'
+    dest: 'public/my-ui-templates.js'
   }
 }
 ```
 
 Make sure to load your template.js file
-`<script src="/ui-templates.js"></script>`
+`<script src="/my-ui-templates.js"></script>`
 
-Inject the `ui-templates` module in your `app.js`
+Inject the `my-ui-templates` module in your `app.js`
 ```
 angular.module('myApp', [
   'ui.bootstrap',
-  'ui-templates'
+  'my-ui-templates'
 ]);
 ```
 
@@ -165,16 +167,28 @@ Then it will work fine!
 For more information visit: https://github.com/karlgoldstein/grunt-html2js
 
 ### Release
-* Bump up version number in `package.json`
-* Commit the version change with the following message: `chore(release): [version number]`
-* tag
-* push changes and a tag (`git push --tags`)
-* switch to the `gh-pages` branch: `git checkout gh-pages`
-* copy content of the dist folder to the main folder
-* Commit the version change with the following message: `chore(release): [version number]`
-* push changes
-* switch back to the `main branch` and modify `package.json` to bump up version for the next iteration
-* commit (`chore(release): starting [version number]`) and push
-* publish Bower and NuGet packages
 
-Well done! (If you don't like repeating yourself open a PR with a grunt task taking care of the above!)
+- `gulp release-pre` to remove '-snapshot' from version, commit, tag, changelog, and push to gh-pages & master
+- `gulp bower` to push current version of all modules to bower
+- `gulp cdnjs` to open pull request for new version to cdnjs
+- `gulp release-post --bump=major|minor|patch` to bump version, add -snapshot prefix, and commit/push
+- `gulp release --bump=major|minor|patch` to `release-pre, bower, cdnjs, release-post`
+
+#### Release Authorization / Permissions
+
+You need the following two things to run the release tasks successfully:
+
+1. Git permission to push to angular-ui/bootstrap organization
+2. A github oauth token exported as environment variable `GH_TOKEN`. The release scripts will tell you if you haven't done this.
+
+  To create a new token, follow the first section in the [Github create-a-token tutorial](https://help.github.com/articles/creating-an-access-token-for-command-line-use).  Then, take the token and export it in your .bashrc:
+
+  ```sh
+  export GH_TOKEN=123abc456def789ghi
+  ```
+
+  Alternatively, you can just use the token whenever you run the release process:
+
+  ```sh
+  GH_TOKEN=123abc456def789ghi gulp release --bump=patch
+  ```

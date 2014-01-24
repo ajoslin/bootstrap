@@ -1,3 +1,101 @@
+<a name="0.11.0"></a>
+## 0.11.0 (2014-02-01)
+
+
+#### Bug Fixes
+
+* **alert:** use interpolation for type attribute ((f0a129ad), closes (#1460))
+* **datepicker:** remove unneeded date creation ((68cb2e5a), closes (#1595))
+* **demo:** Scroll to element on initialization ((4a9dbbef))
+* **moadl:** toggle 'modal-open' class after animation ((4d641ca7), closes (#1629))
+* **modal:**
+  * backdrop z-index when stacking modals ((94a7f593), closes (#1653), (#1654))
+  * destroy modal scope after animation end ((dfc36fd9), closes (#1643))
+* **position:** remove deprecated body scrollTop and scrollLeft ((1ba07c1b), closes (#1658), (#1677))
+* **tabs:**
+  * remove `tabbable` class required for left/right tabs ((19468331), closes (#1708))
+  * use interpolation for type attribute ((83ceb78a), closes (#1409))
+  * fire deselect before select callback ((7474c47b), closes (#1557), (#1566))
+* **typeahead:** correctly handle append to body attribute ((10785736), closes (#1656))
+
+
+#### Features
+
+* **accordion:** support `is-disabled` state ((9c43ae7c), closes (#1126))
+* **carousel:** Support swipe for touchscreen devices ((85140f84), closes (#1686))
+* **dropdownToggle:**
+  * add support for `escape` key ((1417c548), closes (#1558))
+  * support programmatic trigger & toggle callback ((ae31079c), closes (#270), (#284), (#1447))
+* **pagination:** plug into `ngModel` controller ((d65901cf), closes (#1545))
+* **rating:**
+  * make widget accessible ((4f56e60e), closes (#1707))
+  * plug into `ngModel` controller ((47e227f6), closes (#1546))
+* **tooltip:** support more positioning options ((3704db9a), closes (#1676))
+
+
+#### Breaking Changes
+
+* Use interpolation for type attribute.
+
+  Before:
+
+  <tabset type="'pills'" ...></tabset >
+  or
+  <tabset type="navtype" ...></tabset>
+
+  After:
+
+  <tabset type="pills" ...></tabset>
+  or
+  <tabset type="{{navtype}}" ...></tabset>
+ ((83ceb78a))
+* Use interpolation for type attribute.
+
+  Before:
+
+  ```html
+  <alert type="'info'" ...></alert >
+  ```
+  or
+  ```html
+  <alert type="alert.type" ...></alert >
+  ```
+
+  After:
+
+  ```html
+  <alert type="info" ...></alert >
+  ```
+  or
+  ```html
+  <alert type="{{alert.type}}" ...></alert >
+  ```
+ ((f0a129ad))
+* `rating` is now integrated with `ngModelController`.
+ * `value` is replaced from `ng-model`.
+
+  Before:
+
+  <rating value="rate" ...></rating>
+
+  After:
+
+  <rating ng-model="rate" ...></rating>
+ ((47e227f6))
+* Both `pagination` and `pager` are now integrated with `ngModelController`.
+ * `page` is replaced from `ng-model`.
+ * `on-select-page` is removed since `ng-change` can now be used.
+
+  Before:
+
+  <pagination page="current" on-select-page="changed(page)" ...></pagination>
+
+  After:
+
+  <pagination ng-model="current" ng-change="changed()" ...></pagination>
+ ((d65901cf))
+
+
 # 0.10.0 (2014-01-13)
 
 _This release adds AngularJS 1.2 support_
